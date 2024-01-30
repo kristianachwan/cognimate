@@ -1,3 +1,4 @@
+import OpenAI from "openai";
 import "server-only";
 
 import {
@@ -14,6 +15,7 @@ import { cache } from "react";
 import { appRouter, type AppRouter } from "~/server/api/root";
 import { createTRPCContext } from "~/server/api/trpc";
 import { transformer } from "./shared";
+import { env } from "~/env";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -63,3 +65,5 @@ export const api = createTRPCProxyClient<AppRouter>({
         }),
   ],
 });
+
+export const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
