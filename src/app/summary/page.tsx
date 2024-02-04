@@ -9,6 +9,7 @@ import {
   ResizablePanelGroup,
 } from "~/components/ui/resizable";
 import { Card, CardContent } from "~/components/ui/card";
+import { Chatbot } from "~/components/Chatbot";
 
 export default function ChatPage() {
   const { mutateAsync: uploadPdf, isLoading: isUploadLoading } =
@@ -49,7 +50,6 @@ export default function ChatPage() {
         {Object.keys(response).length === 0 && (
           <div className="bg-ghost flex w-full flex-col items-center justify-center gap-6">
             <h1 className="text-2xl font-bold">Let the magic begin 🤖🪄</h1>
-
             <div
               {...getRootProps({
                 className:
@@ -64,7 +64,7 @@ export default function ChatPage() {
           </div>
         )}
 
-        <div className="mx-auto flex w-[700px] flex-col gap-4">
+        <div className="mx-auto flex flex-col gap-4">
           {(isSummarizeLoading || isUploadLoading) && (
             <div className="mx-auto">
               Hang on while we parse and summarize your PDF Document...
@@ -72,7 +72,7 @@ export default function ChatPage() {
           )}
           {Object.keys(response).length > 0 && (
             <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel>
+              <ResizablePanel className="w-[60vw] px-4">
                 <Card className="rounded-xl px-4 py-4">
                   {Object.entries(response).map(([key, value]) => {
                     return (
@@ -89,7 +89,11 @@ export default function ChatPage() {
                 </Card>
               </ResizablePanel>
               <ResizableHandle />
-              <ResizablePanel>One</ResizablePanel>
+              <ResizablePanel className="px-4">
+                <Chatbot
+                  initialMessage={`Here is a summary of a course that I want to learn in the form of JSON ${JSON.stringify(response)}`}
+                />
+              </ResizablePanel>
             </ResizablePanelGroup>
           )}
         </div>

@@ -16,7 +16,7 @@ import { Card } from "~/components/ui/card";
 import { ModeToggle } from "./ToggleMode";
 import Image from "next/image";
 
-export function NavBar() {
+export function Navbar() {
   return (
     <div className="relative h-16 w-screen py-2">
       <Link href="/">

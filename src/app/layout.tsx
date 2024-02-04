@@ -3,7 +3,7 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 import { Toaster } from "~/components/ui/toaster";
 import { TRPCReactProvider } from "~/trpc/react";
-import { NavBar } from "~/components/navbar";
+import { Navbar } from "~/components/Navbar";
 import { ThemeProvider } from "~/components/ui/theme-provider";
 const inter = Inter({
   subsets: ["latin"],
@@ -31,7 +31,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="relative">
-            <NavBar />
+            <Navbar />
             <TRPCReactProvider>{children}</TRPCReactProvider>
             <Toaster />
           </div>
