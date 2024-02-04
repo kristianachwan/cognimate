@@ -9,13 +9,36 @@ import {
   ResizablePanelGroup,
 } from "~/components/ui/resizable";
 import { Card, CardContent } from "~/components/ui/card";
+// import { Chatbot } from "~/components/Chatbot";
+import QuizCards from "~/components/QuizCards";
 import { Chatbot } from "~/components/Chatbot";
+import { useAtom } from "jotai/react";
+import {
+  educationalLevelAtom,
+  emailAtom,
+  specialConditionAtom,
+  usernameAtom,
+  yearOfStudyAtom,
+} from "../state/user";
 
 export default function ChatPage() {
+  const chapterBoilerplate: chapterType = {
+    id: "",
+    unitId: "",
+    name: "",
+    youtubeSearchQuery: "",
+    videoId: "",
+    summary: "",
+    questions: [],
+  };
+
   const { mutateAsync: uploadPdf, isLoading: isUploadLoading } =
     api.upload.create.useMutation();
   const { mutateAsync: summarizePdf, isLoading: isSummarizeLoading } =
     api.summarize.create.useMutation();
+  const { mutateAsync: generateQuestions, isLoading: isGenerateLoading } =
+    api.question.create.useMutation();
+  const [chapterTemplate, setChapterTemplate] = useState<any>();
   const [response, setResponse] = useState<Record<string, string>>({});
   const { getRootProps, getInputProps } = useDropzone({
     accept: { "application/pdf": [".pdf"] },
@@ -25,10 +48,12 @@ export default function ChatPage() {
       uploadS3(file as unknown as File)
         .then(async (data) => {
           console.log(data);
+
           await uploadPdf({
             fileKey: data?.file_key ?? "",
             fileName: data?.file_name ?? "",
           });
+
           setResponse(
             JSON.parse(
               await summarizePdf({
@@ -36,13 +61,24 @@ export default function ChatPage() {
               }),
             ),
           );
-          console.log();
+          chapterBoilerplate.questions = JSON.parse(
+            await generateQuestions({
+              namespace: data?.file_name ?? "",
+            }),
+          );
+
+          setChapterTemplate(chapterBoilerplate);
         })
         .catch((error) => {
           console.error(error);
         });
     },
   });
+
+  const [username] = useAtom(usernameAtom);
+  const [educationalLevel] = useAtom(educationalLevelAtom);
+  const [yearOfStudy] = useAtom(yearOfStudyAtom);
+  const [specialCondition] = useAtom(specialConditionAtom);
 
   return (
     <div className="pt-4">
@@ -64,7 +100,7 @@ export default function ChatPage() {
           </div>
         )}
 
-        <div className="mx-auto flex flex-col gap-4">
+        <div className="mx-auto flex w-[1200px] flex-col gap-4">
           {(isSummarizeLoading || isUploadLoading) && (
             <div className="mx-auto">
               Hang on while we parse and summarize your PDF Document...
@@ -72,27 +108,45 @@ export default function ChatPage() {
           )}
           {Object.keys(response).length > 0 && (
             <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel className="w-[60vw] px-4">
-                <Card className="rounded-xl px-4 py-4">
-                  {Object.entries(response).map(([key, value]) => {
-                    return (
-                      <CardContent className="py-4" key={key}>
-                        <h1 className="mb-2 text-2xl font-bold">{key}</h1>
-                        {value.split("\n").map((line) => (
-                          <p className="indent-4" key={line}>
-                            {line}
-                          </p>
-                        ))}
-                      </CardContent>
-                    );
-                  })}
-                </Card>
+              <ResizablePanel defaultSize={70}>
+                <ResizablePanelGroup direction="vertical" className="pr-4">
+                  <ResizablePanel defaultSize={25} className="pb-4">
+                    <Chatbot
+                      initialMessage={`
+                        Hey! I am ${username}, currently a student at ${educationalLevel} in year ${yearOfStudy} ${specialCondition ? `with special condition of ${specialCondition}` : ""}\n
+                        Here is a summary of a course that I want to learn in the form of JSON ${JSON.stringify(response)}.`}
+                    />
+                  </ResizablePanel>
+                  <ResizableHandle withHandle />
+                  <ResizablePanel className="overflow-scroll pt-4">
+                    <Card className="overflow-scroll rounded-xl px-4 py-4">
+                      <h1 className="mx-3 mb-2 pt-4 text-2xl font-bold">
+                        AI Generated Summary
+                      </h1>
+                      {Object.entries(response).map(([key, value]) => {
+                        return (
+                          <CardContent className="py-4" key={key}>
+                            <h1 className="mb-2 text-xl font-bold">{key}</h1>
+                            {value.split("\n").map((line) => (
+                              <p className="indent-4" key={line}>
+                                {line}
+                              </p>
+                            ))}
+                          </CardContent>
+                        );
+                      })}
+                    </Card>
+                  </ResizablePanel>
+                </ResizablePanelGroup>
               </ResizablePanel>
-              <ResizableHandle />
-              <ResizablePanel className="px-4">
-                <Chatbot
-                  initialMessage={`Here is a summary of a course that I want to learn in the form of JSON ${JSON.stringify(response)}`}
-                />
+              <ResizableHandle withHandle />
+              <ResizablePanel>
+                {isGenerateLoading && (
+                  <div className="mx-auto">
+                    Hang on while we generate your quiz questions...
+                  </div>
+                )}
+                <QuizCards chapter={chapterTemplate} />
               </ResizablePanel>
             </ResizablePanelGroup>
           )}
@@ -101,3 +155,26 @@ export default function ChatPage() {
     </div>
   );
 }
+
+type chapterType = {
+  id: string;
+  unitId: string;
+  name: string;
+  youtubeSearchQuery: string;
+  videoId: string | null;
+  summary: string | null;
+  questions: {
+    id: string;
+    chapterId: string;
+    question: string;
+    options: string;
+    answer: string;
+  }[];
+};
+type questionType = {
+  id: string;
+  chapterId: string;
+  question: string;
+  options: string;
+  answer: string;
+};
