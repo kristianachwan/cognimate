@@ -46,7 +46,7 @@ export default function CreatePage() {
     resolver: zodResolver(createChaptersSchema),
     defaultValues: {
       title: "",
-      units: ["", "", ""],
+      units: [""],
     },
   });
 
