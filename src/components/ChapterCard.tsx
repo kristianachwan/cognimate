@@ -1,8 +1,6 @@
 "use client";
 import { cn } from "~/lib/utils";
 import type { Chapter } from "@prisma/client";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import React from "react";
 import { useToast } from "./ui/use-toast";
 import { Loader2 } from "lucide-react";
@@ -20,7 +18,7 @@ export type ChapterCardHandler = {
 };
 
 const ChapterCard = React.forwardRef<ChapterCardHandler, Props>(
-  ({ chapter, chapterIndex, setCompletedChapters, completedChapters }, ref) => {
+  ({ chapter, setCompletedChapters }, ref) => {
     const { toast } = useToast();
     const [success, setSuccess] = React.useState<boolean | null>(null);
     const { mutateAsync: getChapterInfo, isLoading } =

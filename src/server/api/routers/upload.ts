@@ -21,8 +21,8 @@ export const uploadRouter = createTRPCRouter({
       });
       let text = "";
 
-      for (let i = 0; i < pages.length; i++) {
-        text += pages[i]?.pageContent;
+      for (const page of pages) {
+        text += page?.pageContent;
       }
       const output = await splitter.splitDocuments([
         new Document({ pageContent: text }),

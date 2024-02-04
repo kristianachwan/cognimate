@@ -8,12 +8,7 @@ type Props = {
   chapterIndex: number;
 };
 
-const MainVideoSummary = ({
-  unit,
-  unitIndex,
-  chapter,
-  chapterIndex,
-}: Props) => {
+const MainVideoSummary = ({ unitIndex, chapter, chapterIndex }: Props) => {
   return (
     <div className="mt-16 flex-[2]">
       <h4 className="text-sm uppercase text-secondary-foreground/60">

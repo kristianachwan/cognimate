@@ -31,7 +31,7 @@ export async function downloadS3(file_key: string) {
 
 export async function downloadPdfFromS3(file_key: string) {
   const file_name = await downloadS3(file_key);
-  const loader = new PDFLoader(file_name as string);
+  const loader = new PDFLoader(file_name!);
   const pages = await loader.load();
   console.log(pages);
   return pages;
