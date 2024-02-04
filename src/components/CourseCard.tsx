@@ -13,14 +13,14 @@ import Link from "next/link";
 
 export function CourseCard({ course }: CourseCardProps) {
   return (
-    <Link href={`/course/${course.id}`}>
-      <Card className=" w-[300px]">
+    <Link href={`/course/${course.id}/0/0`}>
+      <Card className="h-[500px] w-[300px] duration-700 ease-in hover:scale-[1.03] hover:border hover:border-primary">
         <CardHeader>
-          <CardTitle>{course.name}</CardTitle>
+          <CardTitle className="capitalize">{course.name}</CardTitle>
         </CardHeader>
         <CardContent>
           <Image
-            className=" h-[260px] w-[250px] rounded-md"
+            className="h-[260px] w-[250px] rounded-md"
             src={course.image}
             width={250}
             height={250}

@@ -3,18 +3,10 @@ import { CourseCard } from "~/components/CourseCard";
 import { api } from "~/trpc/react";
 
 export default function CoursePage() {
-  const { data: courses, isLoading } = api.course.getMany.useQuery();
+  const { data: courses } = api.course.getMany.useQuery();
   return (
-    <>
-      {isLoading ? (
-        <>Loading...</>
-      ) : (
-        <>
-          {courses?.map((course) => (
-            <CourseCard key={course.id} course={course} />
-          ))}
-        </>
-      )}
-    </>
+    <div className="flex h-full w-screen flex-wrap justify-center gap-4">
+      {courses?.map((course) => <CourseCard key={course.id} course={course} />)}
+    </div>
   );
 }
