@@ -18,6 +18,8 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     OPENAI_API_KEY: z.string(),
+    UNSPLASH_API_KEY: z.string(),
+    YOUTUBE_API_KEY: z.string(),
   },
 
   /**
@@ -37,6 +39,8 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    UNSPLASH_API_KEY: process.env.UNSPLASH_API_KEY,
+    YOUTUBE_API_KEY: process.env.YOUTUBE_API_KEY,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
