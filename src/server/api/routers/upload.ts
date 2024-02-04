@@ -16,7 +16,7 @@ export const uploadRouter = createTRPCRouter({
       const index = pc.index("techfest-pdf-store");
       const pages = await downloadPdfFromS3(fileKey);
       const splitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 1000,
+        chunkSize: 2000,
         chunkOverlap: 1,
       });
       let text = "";
