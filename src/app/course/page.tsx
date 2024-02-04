@@ -6,7 +6,7 @@ import { Button } from "~/components/ui/button";
 import { api } from "~/trpc/react";
 
 export default function CoursePage() {
-  const { data: courses } = api.course.getMany.useQuery();
+  const { data: courses, isLoading } = api.course.getMany.useQuery();
   return (
     <div className="px-6">
       <Link href="/course/create">
@@ -16,6 +16,7 @@ export default function CoursePage() {
         </Button>
       </Link>
       <div className="flex h-full min-h-[90vh] w-screen flex-wrap items-center justify-center gap-4">
+        {isLoading && <div>Loading...</div>}
         {courses?.length == 0 ? (
           <div>You dont have any course for now...</div>
         ) : (
