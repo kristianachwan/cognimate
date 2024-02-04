@@ -14,11 +14,18 @@ import {
 } from "~/components/ui/navigation-menu";
 import { Card } from "~/components/ui/card";
 import { ModeToggle } from "./ToggleMode";
+import Image from "next/image";
 
 export function NavBar() {
   return (
-    <div className="relative h-20 w-screen py-2">
-      <Card className="absolute left-[50%] z-10 mx-auto my-2 w-fit -translate-x-[50%]">
+    <div className="relative h-16 w-screen py-2">
+      <Link href="/">
+        <div className="absolute left-4 top-[50%] flex -translate-y-[50%] items-center justify-center gap-4">
+          <Image width={35} height={35} src={"/favicon.png"} alt="favicon" />
+          <h1 className="text-2xl font-bold">Cognimate</h1>
+        </div>
+      </Link>
+      <Card className="absolute left-[50%] top-[50%] z-10 mx-auto my-2 w-fit -translate-x-[50%] -translate-y-[50%]">
         <NavigationMenu className="gap-4">
           <ModeToggle />
           <NavigationMenuList>
