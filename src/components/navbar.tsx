@@ -44,7 +44,7 @@ export function NavBar() {
               </Link>
             </NavigationMenuItem>
             <NavigationMenuItem>
-              <Link href="/chat" legacyBehavior passHref>
+              <Link href="/summary" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   AI Summarize ✨
                 </NavigationMenuLink>

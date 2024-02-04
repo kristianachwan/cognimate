@@ -44,17 +44,23 @@ export default function ChatPage() {
   });
 
   return (
-    <>
-      <div className="rounded-xl bg-white p-2">
+    <div className="pt-4">
+      <div className="rounded-xl p-2">
         {Object.keys(response).length === 0 && (
-          <div
-            {...getRootProps({
-              className:
-                "border-dashed border-2 mx-auto w-[650px] rounded-xl cursor-pointer bg-gray-50 py-8 flex justify-center items-center flex-col",
-            })}
-          >
-            <input {...getInputProps()} />
-            <>Drop your PDF here</>
+          <div className="bg-ghost flex w-full flex-col items-center justify-center gap-6">
+            <h1 className="text-2xl font-bold">Let the magic begin 🤖🪄</h1>
+
+            <div
+              {...getRootProps({
+                className:
+                  "border-dashed border-2 mx-auto w-[650px] rounded-xl cursor-pointer py-8 flex justify-center items-center flex-col",
+              })}
+            >
+              <input {...getInputProps()} />
+              <>
+                Click to upload your PDF your PDF here or just drop it directly
+              </>
+            </div>
           </div>
         )}
 
@@ -88,6 +94,6 @@ export default function ChatPage() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
