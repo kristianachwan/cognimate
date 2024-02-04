@@ -65,7 +65,7 @@ export default function CreatePage() {
   form.watch();
   return (
     <div className="flex h-screen w-screen items-center justify-center">
-      <div className="w-[40vw] rounded-lg border px-8 py-8">
+      <div className="min-w-[40vw] rounded-lg border px-8 py-8">
         <Form {...form}>
           <h1 className="text-2xl font-bold">
             Choose any topic that you want to learn...
