@@ -9,6 +9,16 @@ const config = {
   experimental: {
     swcPlugins: [["@swc-jotai/react-refresh", {}]],
   },
+  images: {
+    remotePatterns: [
+        {
+            protocol: 'https',
+            hostname: 's3.us-west-2.amazonaws.com',
+            port: '',
+            pathname: '/images.unsplash.com/small/**',
+        },
+    ],
+},
 };
 
 export default config;

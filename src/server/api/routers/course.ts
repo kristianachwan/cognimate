@@ -11,6 +11,9 @@ import {
 } from "~/lib/youtube";
 
 export const courseRouter = createTRPCRouter({
+  getMany: publicProcedure.query(async ({ ctx }) => {
+    return await ctx.db.course.findMany({ include: { units: true } });
+  }),
   createChapters: publicProcedure
     .input(createChaptersSchema)
     .mutation(async ({ input: { title, units }, ctx }) => {
