@@ -47,24 +47,26 @@ export const courseRouter = createTRPCRouter({
         },
       });
 
-      for (const unit of outputUnits) {
-        const title = unit.title;
-        const prismaUnit = await ctx.db.unit.create({
-          data: {
-            name: title,
-            courseId: course.id,
-          },
-        });
-        await ctx.db.chapter.createMany({
-          data: unit.chapters.map((chapter) => {
-            return {
-              name: chapter.chapterTitle,
-              youtubeSearchQuery: chapter.youtubeSearchQuery,
-              unitId: prismaUnit.id,
-            };
-          }),
-        });
-      }
+      void (await Promise.all(
+        outputUnits.map(async (unit) => {
+          const title = unit.title;
+          const prismaUnit = await ctx.db.unit.create({
+            data: {
+              name: title,
+              courseId: course.id,
+            },
+          });
+          await ctx.db.chapter.createMany({
+            data: unit.chapters.map((chapter) => {
+              return {
+                name: chapter.chapterTitle,
+                youtubeSearchQuery: chapter.youtubeSearchQuery,
+                unitId: prismaUnit.id,
+              };
+            }),
+          });
+        }),
+      ));
 
       return { courseID: course.id };
     }),
