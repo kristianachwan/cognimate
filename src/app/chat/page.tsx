@@ -9,18 +9,19 @@ export default function ChatPage() {
   const { getRootProps, getInputProps } = useDropzone({
     accept: { "application/pdf": [".pdf"] },
     maxFiles: 1,
-    onDrop: async (acceptedFiles) => {
-      try {
-        const file = acceptedFiles[0];
-        const data = await uploadS3(file as unknown as File);
-        console.log(data);
-        mutateAsync({
-          fileKey: data?.file_key ?? "",
-          fileName: data?.file_name ?? "",
+    onDrop: (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      uploadS3(file as unknown as File)
+        .then((data) => {
+          console.log(data);
+          mutateAsync({
+            fileKey: data?.file_key ?? "",
+            fileName: data?.file_name ?? "",
+          });
+        })
+        .catch((error) => {
+          console.error(error);
         });
-      } catch (error) {
-        console.log(error);
-      }
     },
   });
 
