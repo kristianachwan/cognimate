@@ -17,8 +17,8 @@ import { ModeToggle } from "./ToggleMode";
 
 export function NavBar() {
   return (
-    <div className="bg-white/50 py-2 backdrop-blur-[20px] backdrop-saturate-150 dark:bg-[#0D0D1050]">
-      <Card className="mx-auto my-2 w-fit ">
+    <div className="relative h-20 w-screen py-2">
+      <Card className="absolute left-[50%] z-10 mx-auto my-2 w-fit -translate-x-[50%]">
         <NavigationMenu className="gap-4">
           <ModeToggle />
           <NavigationMenuList>

@@ -30,9 +30,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NavBar />
-          <TRPCReactProvider>{children}</TRPCReactProvider>
-          <Toaster />
+          <div className="relative">
+            <NavBar />
+            <TRPCReactProvider>{children}</TRPCReactProvider>
+            <Toaster />
+          </div>
         </ThemeProvider>
       </body>
     </html>
