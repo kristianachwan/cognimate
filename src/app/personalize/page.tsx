@@ -4,12 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAtom } from "jotai/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { usernameAtom, emailAtom } from "~/app/state/user";
+import {
+  educationalLevelAtom,
+  yearOfStudyAtom,
+  specialConditionAtom,
+} from "~/app/state/user";
 import { Button } from "~/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,10 +22,9 @@ import { Input } from "~/components/ui/input";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  email: z.string().email(),
+  educationalLevel: z.string(),
+  yearOfStudy: z.string(),
+  specialCondition: z.string(),
 });
 
 export default function PersonalizePage() {
@@ -30,20 +32,24 @@ export default function PersonalizePage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      educationalLevel: "",
+      yearOfStudy: "",
+      specialCondition: "",
     },
   });
 
-  const [, setUsername] = useAtom(usernameAtom);
-  const [, setEmail] = useAtom(emailAtom);
+  const [, setEducationalLevel] = useAtom(educationalLevelAtom);
+  const [, setYearOfStudy] = useAtom(yearOfStudyAtom);
+  const [, setSpecialCondtion] = useAtom(specialConditionAtom);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    const { username, email } = values;
-    setUsername(username);
-    setEmail(email);
-    router.push("/personalize");
+    const { educationalLevel, yearOfStudy, specialCondition } = values;
+    setEducationalLevel(educationalLevel);
+    setYearOfStudy(yearOfStudy);
+    setSpecialCondtion(specialCondition);
+    router.push("/course");
   }
   return (
     <div className="flex h-screen w-screen items-center justify-center">
@@ -55,32 +61,42 @@ export default function PersonalizePage() {
             </h1>
             <FormField
               control={form.control}
-              name="username"
+              name="educationalLevel"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Educational Level</FormLabel>
                   <FormControl>
-                    <Input placeholder="Foo" {...field} />
+                    <Input placeholder="University" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is for your display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="email"
+              name="yearOfStudy"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Year of Study</FormLabel>
                   <FormControl>
-                    <Input placeholder="foobar@gmail.com" {...field} />
+                    <Input placeholder="1" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    We wont spam you. Have our words!
-                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="specialCondition"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Special Condition</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Anything you want us to know?"
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
