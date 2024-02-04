@@ -8,7 +8,7 @@ import { api } from "~/trpc/react";
 export default function CoursePage() {
   const { data: courses, isLoading } = api.course.getMany.useQuery();
   return (
-    <div className="px-6">
+    <div className="px-6 pt-8">
       <Link href="/course/create">
         <Button className="gap-4">
           <div>I want to learn...</div>
