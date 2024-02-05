@@ -5,7 +5,6 @@ import { Toaster } from "~/components/ui/toaster";
 import { TRPCReactProvider } from "~/trpc/react";
 import { Navbar } from "~/components/Menu";
 import { ThemeProvider } from "~/components/ui/theme-provider";
-import dynamic from "next/dynamic";
 import { Note } from "../components/Note";
 
 const inter = Inter({
