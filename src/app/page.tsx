@@ -59,10 +59,10 @@ export default function Home() {
           )}
         </div>
       </div>
-      <div className="flex h-screen items-center justify-around">
+      <div className="flex h-screen items-center justify-around px-4">
         <div className="flex w-3/12 flex-col gap-2">
           <h1 className="text-4xl font-bold">Elevate Learning, </h1>
-          <h1 className="text-4xl font-bold">Elevant You.</h1>
+          <h1 className="text-4xl font-bold">Elevate You.</h1>
           <p className="text-wrap text-xl">
             Unlock powerful learning experiences effortlessly with
             Cognimate&lsquo;s AI course builder.
@@ -74,7 +74,7 @@ export default function Home() {
           className="w-5/12 border shadow-lg "
         />
       </div>
-      <div className="flex h-screen flex-row-reverse items-center justify-around ">
+      <div className="flex h-screen flex-row-reverse items-center justify-around px-4">
         <div className="flex w-3/12 flex-col gap-2">
           <h1 className="text-4xl font-bold">
             Learning Has Never Been Easier.
