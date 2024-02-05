@@ -45,19 +45,19 @@ export default function ChatPage() {
           setUploaded(true);
           await uploadPdf({
             fileKey: data?.file_key ?? "",
-            fileName: data?.file_name ?? "",
+            fileName: data?.file_name.replaceAll(" ", "+") ?? "",
           });
 
           setResponse(
             JSON.parse(
               await summarizePdf({
-                namespace: data?.file_name ?? "",
+                namespace: data?.file_name.replaceAll(" ", "+") ?? "",
               }),
             ),
           );
           chapterBoilerplate.questions = JSON.parse(
             await generateQuestions({
-              namespace: data?.file_name ?? "",
+              namespace: data?.file_name.replaceAll(" ", "+") ?? "",
             }),
           );
 
@@ -97,31 +97,36 @@ export default function ChatPage() {
           )}
           {Object.keys(response).length > 0 && (
             <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel>
-                <h1 className="mx-3 mb-2 px-4 text-2xl font-bold">
-                  AI Generated Summary
-                </h1>
-                <Card className="mx-6 rounded-xl px-4 py-4">
-                  {Object.entries(response).map(([key, value]) => {
-                    return (
-                      <CardContent className="py-4" key={key}>
-                        <h1 className="mb-2 text-xl font-bold">{key}</h1>
-                        {value.split("\n").map((line) => (
-                          <p className="indent-4" key={line}>
-                            {line}
-                          </p>
-                        ))}
-                      </CardContent>
-                    );
-                  })}
-                </Card>
+              <ResizablePanel defaultSize={70}>
+                <ResizablePanelGroup direction="vertical">
+                  <ResizablePanel className="px-4 pb-4" defaultSize={15}>
+                    <Chatbot
+                      initialMessage={`Here is a summary of a course that I want to learn in the form of JSON ${JSON.stringify(response)}`}
+                    />
+                  </ResizablePanel>
+                  <ResizableHandle withHandle />
+                  <ResizablePanel className="px-4 pt-4" defaultSize={75}>
+                    <Card className="rounded-xl px-4 py-4">
+                      <h1 className="px-4 pt-4 text-3xl font-bold">
+                        AI Generated Summary
+                      </h1>
+                      {Object.entries(response).map(([key, value]) => {
+                        return (
+                          <CardContent className="py-4" key={key}>
+                            <h1 className="mb-2 text-xl font-bold">{key}</h1>
+                            {value.split("\n").map((line) => (
+                              <p className="indent-4" key={line}>
+                                {line}
+                              </p>
+                            ))}
+                          </CardContent>
+                        );
+                      })}
+                    </Card>
+                  </ResizablePanel>
+                </ResizablePanelGroup>
               </ResizablePanel>
               <ResizableHandle withHandle />
-              <ResizablePanel className="px-4">
-                <Chatbot
-                  initialMessage={`Here is a summary of a course that I want to learn in the form of JSON ${JSON.stringify(response)}`}
-                />
-              </ResizablePanel>
               <ResizablePanel>
                 {isGenerateLoading ? (
                   <div className="mx-auto mt-32 flex flex-col">

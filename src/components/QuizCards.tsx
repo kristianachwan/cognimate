@@ -33,7 +33,7 @@ const QuizCards = ({ chapter }: Props) => {
   }, [answers, questionState, chapter?.questions]);
   return (
     <div className="ml-8 mt-16 flex-[1]">
-      <h1 className="text-2xl font-bold">Concept Check</h1>
+      <h1 className="text-3xl font-bold">Concept Check</h1>
       <div className="mt-2">
         {chapter?.questions.map((question) => {
           const options = JSON.parse(question.options) as string[];
