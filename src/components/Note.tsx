@@ -10,8 +10,6 @@ import { Button } from "./ui/button";
 import { NotebookPen } from "lucide-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useAtom } from "jotai/react";
-import { noteAtom } from "~/app/state/note";
 import { createChatCompletion } from "~/app/actions/openai";
 import { useState } from "react";
 

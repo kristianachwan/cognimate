@@ -31,6 +31,7 @@ export default function SignupPage() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
+      email: "",
     },
   });
 
