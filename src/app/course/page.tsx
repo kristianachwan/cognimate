@@ -15,7 +15,7 @@ export default function CoursePage() {
           <Plus />
         </Button>
       </Link>
-      <div className="flex h-full min-h-[90vh] w-screen flex-wrap items-center justify-center gap-4">
+      <div className="mt-8 flex h-full min-h-[90vh] w-screen flex-wrap items-center justify-center gap-4">
         {isLoading && <div>Loading...</div>}
         {courses?.length == 0 ? (
           <div>You dont have any course for now...</div>
