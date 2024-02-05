@@ -9,7 +9,7 @@ export async function createChatCompletion(
 ) {
   const response = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
-    temperature: 0.8,
+    temperature: 1,
     messages: messages,
   });
 

@@ -60,6 +60,7 @@ export default function ChatPage() {
               namespace: data?.file_name.replaceAll(" ", "+") ?? "",
             }),
           );
+          chapterBoilerplate.name = data?.file_name ?? "";
 
           setChapterTemplate(chapterBoilerplate);
         })
