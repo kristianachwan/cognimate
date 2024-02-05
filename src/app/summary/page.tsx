@@ -106,7 +106,7 @@ export default function ChatPage() {
                   alt="loading-1"
                   width={50}
                   height={50}
-                  className="mx-auto my-2"
+                  className="mx-auto my-2 dark:invert"
                 />
                 <div className="mx-auto">
                   Hang on while we parse your PDF...
@@ -122,7 +122,7 @@ export default function ChatPage() {
                   alt="loading-2"
                   width={50}
                   height={50}
-                  className="mx-auto my-2"
+                  className="mx-auto my-2 dark:invert"
                 />
                 <div className="mx-auto">Summarizing your PDF...</div>
               </div>
@@ -168,7 +168,7 @@ export default function ChatPage() {
                       alt="loading-3"
                       width={50}
                       height={50}
-                      className="mx-auto my-2"
+                      className="mx-auto my-2 dark:invert"
                     />
                     <div className="mx-auto">
                       Generating knowledge check questions..
