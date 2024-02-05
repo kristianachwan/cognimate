@@ -1,6 +1,5 @@
 import axios from "axios";
 import { YoutubeTranscript } from "youtube-transcript";
-import { strictOutput } from "./gpt";
 import { env } from "~/env";
 import { openai } from "~/trpc/server";
 

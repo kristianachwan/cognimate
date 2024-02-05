@@ -8,6 +8,7 @@ import {
   educationalLevelAtom,
   yearOfStudyAtom,
   specialConditionAtom,
+  registeredAtom,
 } from "~/app/state/user";
 import { Button } from "~/components/ui/button";
 import {
@@ -37,7 +38,7 @@ export default function PersonalizePage() {
       specialCondition: "",
     },
   });
-
+  const [, setRegistered] = useAtom(registeredAtom);
   const [, setEducationalLevel] = useAtom(educationalLevelAtom);
   const [, setYearOfStudy] = useAtom(yearOfStudyAtom);
   const [, setSpecialCondtion] = useAtom(specialConditionAtom);
@@ -49,6 +50,7 @@ export default function PersonalizePage() {
     setEducationalLevel(educationalLevel);
     setYearOfStudy(yearOfStudy);
     setSpecialCondtion(specialCondition);
+    setRegistered(true);
     router.push("/course");
   }
   return (

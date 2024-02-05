@@ -8,4 +8,11 @@ export const educationalLevelAtom = atomWithStorage(
   "",
 );
 export const yearOfStudyAtom = atomWithStorage(NAMESPACE + "yearOfStudy", "");
-export const specialConditionAtom = atomWithStorage(NAMESPACE + "", "");
+export const specialConditionAtom = atomWithStorage(
+  NAMESPACE + "specialCondition",
+  "",
+);
+export const registeredAtom = atomWithStorage<boolean>(
+  NAMESPACE + "registered",
+  false,
+);
