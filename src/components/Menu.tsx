@@ -44,7 +44,7 @@ export function Navbar() {
             <NavigationMenuItem>
               <Link href="/course" legacyBehavior passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Learn 📚
+                  Course Builder 🔨
                 </NavigationMenuLink>
               </Link>
             </NavigationMenuItem>
