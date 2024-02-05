@@ -11,6 +11,8 @@ import {
 import { Card, CardContent } from "~/components/ui/card";
 import { Chatbot } from "~/components/Chatbot";
 import QuizCards from "~/components/QuizCards";
+import Image from "next/image";
+import loadingFull from "public/loading-3.svg";
 
 export default function ChatPage() {
   const chapterBoilerplate: chapterType = {
@@ -31,6 +33,7 @@ export default function ChatPage() {
     api.question.create.useMutation();
   const [chapterTemplate, setChapterTemplate] = useState<any>();
   const [response, setResponse] = useState<Record<string, string>>({});
+  const [uploaded, setUploaded] = useState<boolean>(false);
   const { getRootProps, getInputProps } = useDropzone({
     accept: { "application/pdf": [".pdf"] },
     maxFiles: 1,
@@ -39,7 +42,7 @@ export default function ChatPage() {
       uploadS3(file as unknown as File)
         .then(async (data) => {
           console.log(data);
-
+          setUploaded(true);
           await uploadPdf({
             fileKey: data?.file_key ?? "",
             fileName: data?.file_name ?? "",
@@ -120,12 +123,22 @@ export default function ChatPage() {
                 />
               </ResizablePanel>
               <ResizablePanel>
-                {isGenerateLoading && (
-                  <div className="mx-auto">
-                    Hang on while we generate your quiz questions...
+                {isGenerateLoading ? (
+                  <div className="mx-auto mt-32 flex flex-col">
+                    <Image
+                      src={loadingFull}
+                      alt="loading-3"
+                      width={50}
+                      height={50}
+                      className="mx-auto my-2"
+                    />
+                    <div className="mx-auto">
+                      Generating knowledge check questions..
+                    </div>
                   </div>
+                ) : (
+                  <QuizCards chapter={chapterTemplate} />
                 )}
-                <QuizCards chapter={chapterTemplate} />
               </ResizablePanel>
             </ResizablePanelGroup>
           )}
@@ -149,11 +162,4 @@ type chapterType = {
     options: string;
     answer: string;
   }[];
-};
-type questionType = {
-  id: string;
-  chapterId: string;
-  question: string;
-  options: string;
-  answer: string;
 };
