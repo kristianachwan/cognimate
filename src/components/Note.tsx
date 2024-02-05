@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Drawer,
   DrawerTrigger,
@@ -8,10 +9,14 @@ import {
 } from "./ui/drawer";
 import { Button } from "./ui/button";
 import { NotebookPen } from "lucide-react";
-import ReactQuill from "react-quill";
+const DynamicReactQuill = dynamic(() => import("react-quill"), {
+  ssr: false,
+});
+
 import "react-quill/dist/quill.snow.css";
 import { createChatCompletion } from "~/app/actions/openai";
 import { useState } from "react";
+import dynamic from "next/dynamic";
 
 export function Note() {
   // const [note, setNote] = useAtom(noteAtom);
@@ -24,7 +29,7 @@ export function Note() {
           content: `Complete the following sentence: ${note}`,
         },
       ])) ?? "";
-    setNote((prevNote) => prevNote + autoComplete);
+    setNote(autoComplete);
   }
   return (
     <Drawer>
@@ -42,8 +47,8 @@ export function Note() {
             <DrawerTitle className="py-4 text-3xl font-bold">
               Note 📝
             </DrawerTitle>
-            <Button onClick={getAutoComplete}>Auto-complete with AI ✨</Button>
-            <ReactQuill
+            <Button onClick={getAutoComplete}>Ask AI to Tidy Up 🪄✨</Button>
+            <DynamicReactQuill
               theme="snow"
               value={note}
               onChange={(e) => setNote(e)}
