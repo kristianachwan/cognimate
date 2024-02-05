@@ -60,7 +60,7 @@ export default function Home() {
         </div>
       </div>
       <div className="flex h-screen items-center justify-around">
-        <div className="flex flex-col gap-2">
+        <div className="flex w-3/12 flex-col gap-2">
           <h1 className="text-4xl font-bold">Elevate Learning, </h1>
           <h1 className="text-4xl font-bold">Elevant You.</h1>
           <p className="text-wrap text-xl">
@@ -75,7 +75,7 @@ export default function Home() {
         />
       </div>
       <div className="flex h-screen flex-row-reverse items-center justify-around ">
-        <div className="flex flex-col gap-2">
+        <div className="flex w-3/12 flex-col gap-2">
           <h1 className="text-4xl font-bold">
             Learning Has Never Been Easier.
           </h1>
