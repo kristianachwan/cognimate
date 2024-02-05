@@ -15,7 +15,7 @@ export const summarizeRouter = createTRPCRouter({
       const headlines = [];
       const headlinesJSON: Record<string, string> = {};
 
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 4; i++) {
         const randomQueryResponse = await index.namespace(namespace).query({
           topK: 1,
           vector: Array.from(
@@ -60,7 +60,7 @@ export const summarizeRouter = createTRPCRouter({
         console.log("queryString: " + queryString);
         const prompt =
           queryString +
-          ". Give me 5 of the most important points from the text above separated by newline characters.";
+          ". Give me 3 of the most important points from the text above separated by newline characters.";
         const completion = await openai.chat.completions.create({
           messages: [{ role: "user", content: prompt }],
           model: "gpt-3.5-turbo-0125",

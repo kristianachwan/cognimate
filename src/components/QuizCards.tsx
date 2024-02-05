@@ -59,9 +59,9 @@ const QuizCards = ({ chapter }: Props) => {
     chapter?.questions?.forEach((question) => {
       if (question.id in questionState) {
         if (questionState[question.id]) {
-          summary.wrong.push(question.question);
-        } else {
           summary.right.push(question?.question);
+        } else {
+          summary.wrong.push(question?.question);
         }
       }
     });
@@ -69,21 +69,21 @@ const QuizCards = ({ chapter }: Props) => {
     const wellPromise = createChatCompletion([
       {
         role: "user",
-        content: `I am currently learning ${chapter.name} and got this questions right: ${JSON.stringify(summary.right)}. As short as you possibly can, tell me where I did good.`,
+        content: `I am currently learning ${chapter.name} and got this questions right: ${JSON.stringify(summary.right)}. In 3 bullet points, tell me what I did good, separated by newline characters.`,
       },
     ]).then((well) => setWell(well ?? ""));
 
     const notWellPromise = createChatCompletion([
       {
         role: "user",
-        content: `I am currently learning ${chapter.name} and got this questions wrong: ${JSON.stringify(summary.wrong)}. In 4 sentences without beating around the bush, tell me where I lack.`,
+        content: `I am currently learning ${chapter.name} and got this questions wrong: ${JSON.stringify(summary.wrong)}. In 3 bullet points, tell me where I lack, separated by newline characters.`,
       },
     ]).then((notWell) => setNotWell(notWell ?? ""));
 
     const improvePromise = createChatCompletion([
       {
         role: "user",
-        content: `I am currently learning ${chapter.name} and got this questions right: ${JSON.stringify(summary.right)} and wrong: ${JSON.stringify(summary.wrong)}. As short as you possibly can, tell me what I should focus on to improve in my learning experience.`,
+        content: `I am currently learning ${chapter.name} and got this questions right: ${JSON.stringify(summary.right)} and wrong: ${JSON.stringify(summary.wrong)}. In 3 bullet points, tell me what I should focus on to improve in my learning experience, separated by newline characters.`,
       },
     ]).then((improve) => setImprove(improve ?? ""));
 
@@ -189,19 +189,37 @@ const QuizCards = ({ chapter }: Props) => {
                 <AccordionTrigger className="font-bold">
                   What went well?
                 </AccordionTrigger>
-                <AccordionContent>{well}</AccordionContent>
+                <AccordionContent>
+                  <div className="flex flex-col">
+                    {well.split("\n").map((item, id) => (
+                      <p key={id}>{item}</p>
+                    ))}
+                  </div>
+                </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2">
                 <AccordionTrigger className="font-bold">
                   What did not go well?
                 </AccordionTrigger>
-                <AccordionContent>{notWell}</AccordionContent>
+                <AccordionContent>
+                  <div className="flex flex-col">
+                    {notWell.split("\n").map((item, id) => (
+                      <p key={id}>{item}</p>
+                    ))}
+                  </div>
+                </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-3">
                 <AccordionTrigger className="font-bold">
                   How to improve?
                 </AccordionTrigger>
-                <AccordionContent>{improve}</AccordionContent>
+                <AccordionContent>
+                  <div className="flex flex-col">
+                    {improve.split("\n").map((item, id) => (
+                      <p key={id}>{item}</p>
+                    ))}
+                  </div>
+                </AccordionContent>
               </AccordionItem>
             </Accordion>
           </AlertDialogHeader>
