@@ -72,27 +72,32 @@ export async function getQuestionsFromTranscript(
       ],
       model: "gpt-3.5-turbo-0125",
     });
-    const generatedAnswer = answer.choices[0]?.message.content;
 
-    const options = await openai.chat.completions.create({
-      messages: [
-        {
-          role: "user",
-          content:
-            `In below 10 words each, give me three wrong answers to the question: ${generatedQuestion} without any precursor or additional words.` +
-            "Give it to me in an array of strings, remember wrong answers only that are still related.",
-        },
-      ],
-      model: "gpt-3.5-turbo-0125",
-    });
-    const generatedOptions = JSON.parse(
-      options.choices[0]?.message.content ?? "",
-    );
+    const generatedAnswer = answer.choices[0]?.message.content;
+    let visitedQuestions = "";
+    const optionList = [];
+
+    for (let i = 0; i < 3; i++) {
+      const options = await openai.chat.completions.create({
+        messages: [
+          {
+            role: "user",
+            content:
+              `In below 10 words, give me a wrong answer to the question: ${generatedQuestion} without any precursor or additional words, that is not already in: ${visitedQuestions}.` +
+              "Give wrong answers only that are still related.",
+          },
+        ],
+        model: "gpt-3.5-turbo-0125",
+      });
+      visitedQuestions += ", " + options.choices[0]?.message.content;
+      optionList.push(options.choices[0]?.message.content);
+    }
+
     questionTemplate.question = generatedQuestion ?? "";
     questionTemplate.answer = generatedAnswer ?? "";
-    questionTemplate.option1 = generatedOptions[0] ?? "";
-    questionTemplate.option2 = generatedOptions[1] ?? "";
-    questionTemplate.option3 = generatedOptions[2] ?? "";
+    questionTemplate.option1 = optionList[0] ?? "";
+    questionTemplate.option2 = optionList[1] ?? "";
+    questionTemplate.option3 = optionList[2] ?? "";
 
     questionList.push(structuredClone(questionTemplate));
   }

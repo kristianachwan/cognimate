@@ -14,6 +14,13 @@ export const questionRouter = createTRPCRouter({
       const headlines = [];
 
       for (let i = 0; i < 6; i++) {
+        const questionTemplate: Question = {
+          id: "",
+          chapterId: "",
+          question: "",
+          answer: "",
+          options: "",
+        };
         const randomQueryResponse = await index.namespace(namespace).query({
           topK: 1,
           vector: Array.from(
@@ -23,29 +30,69 @@ export const questionRouter = createTRPCRouter({
           includeMetadata: true,
         });
 
-        const prompt =
+        const questionGenPrompt =
           randomQueryResponse.matches[0]?.metadata?.content +
-          ". Given the chunk of statement above, generate a multiple choice question in the following JSON format: " +
-          " {id: string, chapterId: string, question: string, options: string, answer: string } where id and chapterId should be random hash strings" +
-          " and the options must be in the form of a string array wrapped in square brackets";
-        console.log(prompt);
-        const completion = await openai.chat.completions.create({
+          `. Given the context above, you are to generate a multiple choice question based strictly on the context above.` +
+          "Generate only the question WITHOUT ANY OPTIONS.";
+        const questionCompletion = await openai.chat.completions.create({
+          messages: [{ role: "user", content: questionGenPrompt }],
+          model: "gpt-3.5-turbo-0125",
+        });
+
+        const generatedQuestion =
+          questionCompletion.choices[0]?.message.content;
+        const answerCompletion = await openai.chat.completions.create({
           messages: [
             {
-              role: "system",
-              content: "You are a helpful assistant designed to output JSON.",
+              role: "user",
+              content:
+                `Given the context ${randomQueryResponse.matches[0]?.metadata?.content}` +
+                `As short as you possibly can, give me the answer to the question: ${generatedQuestion} without any precursor or additional words.`,
             },
-            { role: "user", content: prompt },
           ],
           model: "gpt-3.5-turbo-0125",
         });
-        headlines.push(
-          JSON.parse(completion.choices[0]?.message.content ?? ""),
-        );
-        headlines[i].id = JSON.stringify(i);
-        headlines[i].options = JSON.stringify(headlines[i].options);
+        const generatedAnswer = answerCompletion.choices[0]?.message.content;
+        let visitedQuestions = "";
+        const optionList = [];
+
+        for (let i = 0; i < 3; i++) {
+          const options = await openai.chat.completions.create({
+            messages: [
+              {
+                role: "user",
+                content:
+                  `Given the context ${questionCompletion.choices[0]?.message.content}` +
+                  `Give me ONE wrong answer to the question: ${generatedQuestion} that may seem true.` +
+                  `that is not already in the set:(${visitedQuestions}).` +
+                  " Without any accompanying/precursor/additional words.",
+              },
+            ],
+            model: "gpt-3.5-turbo-0125",
+          });
+          visitedQuestions += ", " + options.choices[0]?.message.content;
+          optionList.push(options.choices[0]?.message.content);
+        }
+        optionList.push(generatedAnswer);
+
+        questionTemplate.id = JSON.stringify(i);
+        questionTemplate.chapterId = JSON.stringify(i);
+        questionTemplate.options = JSON.stringify(optionList);
+        questionTemplate.question = generatedQuestion ?? "";
+        questionTemplate.answer = generatedAnswer ?? "";
+
+        headlines.push(structuredClone(questionTemplate));
       }
+      console.log("=======HEADLINES===================================");
       console.log(headlines);
+      console.log("=======HEADLINES===================================");
       return JSON.stringify(headlines);
     }),
 });
+type Question = {
+  id: string;
+  chapterId: string;
+  question: string;
+  answer: string;
+  options: string;
+};
