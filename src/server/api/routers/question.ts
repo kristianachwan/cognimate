@@ -26,7 +26,7 @@ export const questionRouter = createTRPCRouter({
         const prompt =
           randomQueryResponse.matches[0]?.metadata?.content +
           ". Given the chunk of statement above, generate a multiple choice question in the following JSON format: " +
-          " {id: string, chapterId: string, question: string, options: string, answer: string } where id and chapterId can be any unique string identifier" +
+          " {id: string, chapterId: string, question: string, options: string, answer: string } where id and chapterId should be random hash strings" +
           " and the options must be in the form of a string array wrapped in square brackets";
         console.log(prompt);
         const completion = await openai.chat.completions.create({
@@ -42,6 +42,7 @@ export const questionRouter = createTRPCRouter({
         headlines.push(
           JSON.parse(completion.choices[0]?.message.content ?? ""),
         );
+        headlines[i].id = JSON.stringify(i);
         headlines[i].options = JSON.stringify(headlines[i].options);
       }
       console.log(headlines);
