@@ -4,15 +4,31 @@ import Link from "next/link";
 import { CourseCard } from "~/components/CourseCard";
 import { Card } from "~/components/ui/card";
 import { api } from "~/trpc/react";
+import loading from "public/loading-1.svg";
+import Image from "next/image";
 
 export default function CoursePage() {
   const { data: courses, isLoading } = api.course.getMany.useQuery();
   return (
     <div className="px-6 pt-8">
       <div className="mt-8 flex h-full min-h-[90vh] w-screen flex-wrap items-center justify-center gap-4">
-        {isLoading && <div>Loading...</div>}
+        {isLoading && (
+          <Image
+            src={loading}
+            alt="loading-1"
+            width={50}
+            height={50}
+            className="mx-auto my-2 dark:invert"
+          />
+        )}
+
         {courses?.length == 0 ? (
-          <div>You dont have any course for now...</div>
+          <Image
+            src={"/empty-placeholder.svg"}
+            alt="empty-placeholder"
+            width={300}
+            height={300}
+          />
         ) : (
           <>
             <Link href={`/course/create`}>
