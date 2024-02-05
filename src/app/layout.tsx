@@ -5,6 +5,7 @@ import { Toaster } from "~/components/ui/toaster";
 import { TRPCReactProvider } from "~/trpc/react";
 import { Navbar } from "~/components/Menu";
 import { ThemeProvider } from "~/components/ui/theme-provider";
+import { Note } from "~/components/Note";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
             <Navbar />
             <TRPCReactProvider>{children}</TRPCReactProvider>
             <Toaster />
+            <Note />
           </div>
         </ThemeProvider>
       </body>
