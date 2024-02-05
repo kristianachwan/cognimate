@@ -127,7 +127,7 @@ export default function ChatPage() {
                 </ResizablePanelGroup>
               </ResizablePanel>
               <ResizableHandle withHandle />
-              <ResizablePanel>
+              <ResizablePanel className="min-h-screen">
                 {isGenerateLoading ? (
                   <div className="mx-auto mt-32 flex flex-col">
                     <Image
