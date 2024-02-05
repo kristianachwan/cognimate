@@ -34,7 +34,7 @@ export default function CreatePage() {
         router.push(`/course/create/${courseID}`);
       },
       onError: (error) => {
-        console.error(error);
+        console.error("ERROR:" + error);
         toast({
           title: "Error",
           description: "Something went wrong",
