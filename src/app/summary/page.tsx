@@ -10,13 +10,30 @@ import {
 } from "~/components/ui/resizable";
 import { Card, CardContent } from "~/components/ui/card";
 import { Chatbot } from "~/components/Chatbot";
+import QuizCards from "~/components/QuizCards";
+import Image from "next/image";
+import loadingFull from "public/loading-3.svg";
 
 export default function ChatPage() {
+  const chapterBoilerplate: chapterType = {
+    id: "",
+    unitId: "",
+    name: "",
+    youtubeSearchQuery: "",
+    videoId: "",
+    summary: "",
+    questions: [],
+  };
+
   const { mutateAsync: uploadPdf, isLoading: isUploadLoading } =
     api.upload.create.useMutation();
   const { mutateAsync: summarizePdf, isLoading: isSummarizeLoading } =
     api.summarize.create.useMutation();
+  const { mutateAsync: generateQuestions, isLoading: isGenerateLoading } =
+    api.question.create.useMutation();
+  const [chapterTemplate, setChapterTemplate] = useState<any>();
   const [response, setResponse] = useState<Record<string, string>>({});
+  const [uploaded, setUploaded] = useState<boolean>(false);
   const { getRootProps, getInputProps } = useDropzone({
     accept: { "application/pdf": [".pdf"] },
     maxFiles: 1,
@@ -25,10 +42,12 @@ export default function ChatPage() {
       uploadS3(file as unknown as File)
         .then(async (data) => {
           console.log(data);
+          setUploaded(true);
           await uploadPdf({
             fileKey: data?.file_key ?? "",
             fileName: data?.file_name ?? "",
           });
+
           setResponse(
             JSON.parse(
               await summarizePdf({
@@ -36,7 +55,13 @@ export default function ChatPage() {
               }),
             ),
           );
-          console.log();
+          chapterBoilerplate.questions = JSON.parse(
+            await generateQuestions({
+              namespace: data?.file_name ?? "",
+            }),
+          );
+
+          setChapterTemplate(chapterBoilerplate);
         })
         .catch((error) => {
           console.error(error);
@@ -72,12 +97,15 @@ export default function ChatPage() {
           )}
           {Object.keys(response).length > 0 && (
             <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel className="w-[60vw] px-4">
-                <Card className="rounded-xl px-4 py-4">
+              <ResizablePanel>
+                <h1 className="mx-3 mb-2 px-4 text-2xl font-bold">
+                  AI Generated Summary
+                </h1>
+                <Card className="mx-6 rounded-xl px-4 py-4">
                   {Object.entries(response).map(([key, value]) => {
                     return (
                       <CardContent className="py-4" key={key}>
-                        <h1 className="mb-2 text-2xl font-bold">{key}</h1>
+                        <h1 className="mb-2 text-xl font-bold">{key}</h1>
                         {value.split("\n").map((line) => (
                           <p className="indent-4" key={line}>
                             {line}
@@ -88,11 +116,29 @@ export default function ChatPage() {
                   })}
                 </Card>
               </ResizablePanel>
-              <ResizableHandle />
+              <ResizableHandle withHandle />
               <ResizablePanel className="px-4">
                 <Chatbot
                   initialMessage={`Here is a summary of a course that I want to learn in the form of JSON ${JSON.stringify(response)}`}
                 />
+              </ResizablePanel>
+              <ResizablePanel>
+                {isGenerateLoading ? (
+                  <div className="mx-auto mt-32 flex flex-col">
+                    <Image
+                      src={loadingFull}
+                      alt="loading-3"
+                      width={50}
+                      height={50}
+                      className="mx-auto my-2"
+                    />
+                    <div className="mx-auto">
+                      Generating knowledge check questions..
+                    </div>
+                  </div>
+                ) : (
+                  <QuizCards chapter={chapterTemplate} />
+                )}
               </ResizablePanel>
             </ResizablePanelGroup>
           )}
@@ -101,3 +147,19 @@ export default function ChatPage() {
     </div>
   );
 }
+
+type chapterType = {
+  id: string;
+  unitId: string;
+  name: string;
+  youtubeSearchQuery: string;
+  videoId: string | null;
+  summary: string | null;
+  questions: {
+    id: string;
+    chapterId: string;
+    question: string;
+    options: string;
+    answer: string;
+  }[];
+};
