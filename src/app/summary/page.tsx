@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { uploadS3 } from "../actions/s3";
 import { api } from "~/trpc/react";
+import { UploadCloud } from "lucide-react";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -12,6 +13,8 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Chatbot } from "~/components/Chatbot";
 import QuizCards from "~/components/QuizCards";
 import Image from "next/image";
+import loading from "public/loading-1.svg";
+import loadingHalf from "public/loading-2.svg";
 import loadingFull from "public/loading-3.svg";
 
 export default function ChatPage() {
@@ -73,9 +76,12 @@ export default function ChatPage() {
   return (
     <div className="pt-4">
       <div className="rounded-xl p-2">
-        {Object.keys(response).length === 0 && (
-          <div className="bg-ghost flex w-full flex-col items-center justify-center gap-6">
-            <h1 className="text-2xl font-bold">Let the magic begin 🤖🪄</h1>
+        {Object.keys(response).length === 0 && !uploaded && (
+          <div className="bg-ghost mx-auto flex w-fit flex-col items-center justify-center gap-6">
+            <h1 className="text-center text-2xl font-bold">
+              Upload your PDF for an AI Generated Summary and Knowledge Check
+              🤖🪄
+            </h1>
             <div
               {...getRootProps({
                 className:
@@ -84,16 +90,42 @@ export default function ChatPage() {
             >
               <input {...getInputProps()} />
               <>
-                Click to upload your PDF your PDF here or just drop it directly
+                <UploadCloud size={48} className="mb-1" />
+                <p className="text-bold">Drop your PDF document here</p>
               </>
             </div>
           </div>
         )}
 
         <div className="mx-auto flex flex-col gap-4">
-          {(isSummarizeLoading || isUploadLoading) && (
+          {isUploadLoading && (
             <div className="mx-auto">
-              Hang on while we parse and summarize your PDF Document...
+              <div className="mx-auto mt-32 flex flex-col">
+                <Image
+                  src={loading}
+                  alt="loading-1"
+                  width={50}
+                  height={50}
+                  className="mx-auto my-2"
+                />
+                <div className="mx-auto">
+                  Hang on while we parse your PDF...
+                </div>
+              </div>
+            </div>
+          )}
+          {isSummarizeLoading && (
+            <div className="mx-auto">
+              <div className="mx-auto mt-32 flex flex-col">
+                <Image
+                  src={loadingHalf}
+                  alt="loading-2"
+                  width={50}
+                  height={50}
+                  className="mx-auto my-2"
+                />
+                <div className="mx-auto">Summarizing your PDF...</div>
+              </div>
             </div>
           )}
           {Object.keys(response).length > 0 && (
