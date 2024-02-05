@@ -2,6 +2,7 @@ import axios from "axios";
 import { YoutubeTranscript } from "youtube-transcript";
 import { strictOutput } from "./gpt";
 import { env } from "~/env";
+import { openai } from "~/trpc/server";
 
 export async function searchYoutube(searchQuery: string) {
   searchQuery = encodeURIComponent(searchQuery);
@@ -47,18 +48,56 @@ export async function getQuestionsFromTranscript(
     option2: string;
     option3: string;
   };
-  const questions: Question[] = await strictOutput(
-    "You are a helpful AI that is able to generate mcq questions and answers, the length of each answer should not be more than 15 words",
-    new Array(5).fill(
-      `You are to generate a random hard mcq question about ${course_title} with context of the following transcript: ${transcript}`,
-    ),
-    {
-      question: "question",
-      answer: "answer with max length of 15 words",
-      option1: "option1 with max length of 15 words",
-      option2: "option2 with max length of 15 words",
-      option3: "option3 with max length of 15 words",
-    },
-  );
-  return questions;
+  const questionList: Question[] = [];
+  for (let i = 0; i < 5; i++) {
+    const questionTemplate: Question = {
+      question: "",
+      answer: "",
+      option1: "",
+      option2: "",
+      option3: "",
+    };
+    const prompt = `You are to generate a random theory based question about ${course_title}`;
+    const completion = await openai.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "gpt-3.5-turbo-0125",
+    });
+    const generatedQuestion = completion.choices[0]?.message.content;
+    const answer = await openai.chat.completions.create({
+      messages: [
+        {
+          role: "user",
+          content: `In below 10 words, give me the answer to the question: ${generatedQuestion} without any precursor or additional words.`,
+        },
+      ],
+      model: "gpt-3.5-turbo-0125",
+    });
+    const generatedAnswer = answer.choices[0]?.message.content;
+
+    const options = await openai.chat.completions.create({
+      messages: [
+        {
+          role: "user",
+          content:
+            `In below 10 words each, give me three wrong answers to the question: ${generatedQuestion} without any precursor or additional words.` +
+            "Give it to me in an array of strings, remember wrong answers only that are still related.",
+        },
+      ],
+      model: "gpt-3.5-turbo-0125",
+    });
+    const generatedOptions = JSON.parse(
+      options.choices[0]?.message.content ?? "",
+    );
+    questionTemplate.question = generatedQuestion ?? "";
+    questionTemplate.answer = generatedAnswer ?? "";
+    questionTemplate.option1 = generatedOptions[0] ?? "";
+    questionTemplate.option2 = generatedOptions[1] ?? "";
+    questionTemplate.option3 = generatedOptions[2] ?? "";
+
+    questionList.push(structuredClone(questionTemplate));
+  }
+  console.log("==========QUESTIONLIST============================");
+  console.log(questionList);
+  console.log("=================================================");
+  return questionList;
 }
