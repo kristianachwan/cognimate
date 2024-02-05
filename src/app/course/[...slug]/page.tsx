@@ -53,14 +53,16 @@ const CoursePage = async ({ params: { slug } }: Props) => {
       <CourseSideBar course={course} currentChapterId={chapter.id} />
       <div>
         <div className="ml-[400px] px-8">
-          <div className="flex">
+          <div className="my-2 flex">
             <MainVideoSummary
               chapter={chapter}
               chapterIndex={chapterIndex}
               unit={unit}
               unitIndex={unitIndex}
             />
-            <QuizCards chapter={chapter} />
+            <div className="h-screen w-1/3 overflow-y-scroll">
+              <QuizCards chapter={chapter} />
+            </div>
           </div>
 
           <div className="mt-4 h-[1px] flex-[1] bg-gray-500 text-gray-500" />
