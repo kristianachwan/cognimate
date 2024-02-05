@@ -39,9 +39,9 @@ export function Chatbot({ initialMessage = "" }: ChatbotProps) {
   };
   return (
     <Card className="rounded-xl px-4 py-4">
-      <div>
+      <div className="flex flex-col">
         <h1 className="text-3xl font-bold">Ask Cognimate! 🤖🪄</h1>
-        <div className="flex flex-col gap-4 py-6">
+        <div className="flex flex-grow flex-col gap-4 py-6">
           {messages.slice(1).map((obj, i) => (
             <div key={i} className="w-full">
               {obj.role === "user" && (
@@ -69,7 +69,6 @@ export function Chatbot({ initialMessage = "" }: ChatbotProps) {
                 value={prompt}
               />
             </form>
-
             <Button type="submit">
               <Send />
             </Button>

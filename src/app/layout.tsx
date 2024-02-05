@@ -3,8 +3,8 @@ import "~/styles/globals.css";
 import { Inter } from "next/font/google";
 import { Toaster } from "~/components/ui/toaster";
 import { TRPCReactProvider } from "~/trpc/react";
-import { Navbar } from "~/components/Navbar";
 import { ThemeProvider } from "~/components/ui/theme-provider";
+import { Navbar } from "~/components/Navbar";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
