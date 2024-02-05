@@ -4,7 +4,6 @@ import * as React from "react";
 import Link from "next/link";
 
 import { cn } from "~/lib/utils";
-// import { Icons } from "~/components/icons";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -21,7 +20,13 @@ export function Navbar() {
     <div className="relative h-16 w-screen py-2">
       <Link href="/">
         <div className="absolute left-4 top-[50%] flex -translate-y-[50%] items-center justify-center gap-4">
-          <Image width={35} height={35} src={"/favicon.png"} alt="favicon" />
+          <Image
+            width={35}
+            height={35}
+            src={"/favicon.svg"}
+            alt="favicon"
+            className="dark:invert"
+          />
           <h1 className="text-2xl font-bold">Cognimate</h1>
         </div>
       </Link>

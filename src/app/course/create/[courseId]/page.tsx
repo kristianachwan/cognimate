@@ -24,7 +24,7 @@ const CreateChapters = async ({ params: { courseId } }: Props) => {
     },
   });
   if (!course) {
-    return redirect("/create");
+    return redirect("/course/create");
   }
   return (
     <div className="mx-auto my-16 flex max-w-xl flex-col items-start">

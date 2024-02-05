@@ -29,7 +29,7 @@ const CoursePage = async ({ params: { slug } }: Props) => {
     },
   });
   if (!course) {
-    return redirect("/gallery");
+    return redirect("/course");
   }
 
   if (!unitIndexParam || !chapterIndexParam) {
@@ -40,11 +40,11 @@ const CoursePage = async ({ params: { slug } }: Props) => {
 
   const unit = course.units[unitIndex];
   if (!unit) {
-    return redirect("/gallery");
+    return redirect("/course");
   }
   const chapter = unit.chapters[chapterIndex];
   if (!chapter) {
-    return redirect("/gallery");
+    return redirect("/course");
   }
   const nextChapter = unit.chapters[chapterIndex + 1];
   const prevChapter = unit.chapters[chapterIndex - 1];
