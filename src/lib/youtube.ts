@@ -91,7 +91,7 @@ export async function getQuestionsFromTranscript(
       visitedQuestions += ", " + options.choices[0]?.message.content;
       optionList.push(options.choices[0]?.message.content);
     }
-
+    console.log(optionList);
     questionTemplate.question = generatedQuestion ?? "";
     questionTemplate.answer = generatedAnswer ?? "";
     questionTemplate.option1 = optionList[0] ?? "";

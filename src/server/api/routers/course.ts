@@ -58,7 +58,7 @@ export const courseRouter = createTRPCRouter({
                   role: "user",
                   content:
                     `Given the topic ${chapterName.choices[0]?.message.content}, ` +
-                    "Provide me with a youtube search query for the given topic.",
+                    "Provide me with a youtube search query for the given topic WITHOUT QUOTATION MARKS.",
                 },
               ],
               model: "gpt-3.5-turbo-0125",
@@ -67,7 +67,8 @@ export const courseRouter = createTRPCRouter({
             visitedSet =
               visitedSet + ", " + chapterName.choices[0]?.message.content;
             chapterTemplate.chapterTitle =
-              JSON.parse(chapterName.choices[0]?.message.content ?? "") ?? "";
+              chapterName.choices[0]?.message.content?.replaceAll('"', "") ??
+              "";
             chapterTemplate.youtubeSearchQuery =
               chapterYTQuery.choices[0]?.message.content ?? "";
             chapterList.push(structuredClone(chapterTemplate));
