@@ -26,5 +26,5 @@ We were not able to get the generative models to output consistent questions and
 
 ## What's Next for Cognimate
 1. In order to reduce cost overhead and load-time, we can shift our application to use open source models such as Llama which are deployed on self-hosted GPU clusters, allowing for more concurrent users and scalability.
-2. Extending the use case from Singaporean students to other countries. This would include provision of support for languages other than English and to also deep dive into the needs of students for different counties.
+2. Extending the use case from Singaporean students to other countries. This would include provision of support for languages other than English and to also deep dive into the needs of students for different countries.
 
